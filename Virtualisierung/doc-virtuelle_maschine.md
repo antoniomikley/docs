@@ -65,17 +65,16 @@ auth_unix_rw = "none"
 unix_sock_group = "libvirt"
 unix_sock_ro_perms = "0777"
 unix_sock_rw_perms = "0770"
-
 ```
 
 ### Dienst
 
 Anschließend kann der libvirtd deamon gestartet werden.
 
-OpenRC:
+**OpenRC:**
 `# rc-service libvirtd start && rc-update add libvirtd default` 
 
-systemd:
+**systemd:**
 `# systemctl enable --now libvirtd` 
 
 
@@ -87,21 +86,26 @@ Für gewöhnlich sollte an diesem Punkt schon ein Standard-Netzwerk konfiguriert
 
 `# virsh net-list --all` 
 
+
 Wenn das Netzwerk noch nicht aktiviert ist, starte es mit diesem Befehl:
 
 `# virsh net-start default`
+
 
 Änderungen am Netzwerk können mit diesem Befehl vorgenommen werden:
 
 `# virsh net-edit default`
 
+
 Netzwerk ausschalten:
 
 `# virsh net-destroy default`
 
+
 Netzwerk nach Boot des Hostgeräts automatisch starten:
 
 `# virsh net-autostart default` 
+
 
 Um eine Verbindung mit dem Internet in der virtuellen Maschine herzustellen ist das von libvirt automatisch konfigurierte 'default'-Netzwerk ausreichend. Soll die virtuelle Maschine jedoch auch für Geräte außerhalb dieses Standard-Netzwerkes sichtbar sein, dann muss eine Netzwerkbrücke eingerichtet werden.
 
@@ -116,14 +120,16 @@ Für die folgenden Befehle sind die Interface-Namen und im Falle einer statische
 
 Es ist ebenfalls zu bedenken, dass während der folgenden Prozedur die Verbindung zum Internet verloren gehen kann.
 
-OpenRC:
+**OpenRC:**
 
 Stelle sicher, dass die Interfaces, die Teil der Brücke sein sollen, nicht in /etc/init.d/ vorhanden sind.
 
 `# rc-update delete net.<Name des Interfaces> boot`
+
 `# rm /etc/init.d/net.<Name des Interfaces>`
 
 Dieser Schritt ist für alle relevanten Interfaces zu wiederholen.
+
 
 Ändere oder erstelle /etc/conf.d/net:
 
@@ -148,7 +154,7 @@ Anschließend muss die Netzwerkbrücke gestartet werden:
 `# rc-service net.br0 start && rc-update add net.br0 default`
 
 
-Systemd:
+**Systemd:**
 
 Es sind folgende Dateien zu erstellen:
 
@@ -157,8 +163,8 @@ Es sind folgende Dateien zu erstellen:
 [NetDev]
 Name=br0
 Kind=bridge
-
 ```
+
 
 `/etc/systemd/network/Ethernet0.network`
 ```
@@ -167,8 +173,8 @@ Name=enp1s0 # Und alle anderen zu überbrückenden Interfaces
 
 [Network]
 Bridge=br0
-
 ```
+
 
 `/etc/systemd/network/Bridge0.network`
 ```
@@ -179,6 +185,7 @@ Name=br0
 DHCP=ipv4
 
 ``` 
+
 
 
 Oder im Falle einer statischen IP-Konfiguration:
@@ -198,7 +205,6 @@ Name=br0
 DNS=192.168.1.1
 Address=192.168.1.2/24
 Gateway=192.168.1.1
-
 ```
 
 Um die Netzwerkbrücke zu starten muss der 'systemd-networkd'-Dienst gestartet werden:
@@ -212,6 +218,7 @@ Um die Netzwerkbrücke zu starten muss der 'systemd-networkd'-Dienst gestartet w
 Vor der Einrichtung der virtuellen Maschine kann bereits eine img-Datei mit der gewünschten Größe, dem Format und am bevorzugtem Ort erstellt werden:
 
 `$ qemu-img create -f qcow2 <VM-Name>.img <Größe in GB>G`
+
 
 Auf dieses Image kann dann die virtuelle Mashine installiert werden:
 
@@ -227,7 +234,6 @@ $ virt-install  \
   --network default \
   --graphics spice
   --virt-type kvm
-
 ```
 Im Fall, das vorher keine img-Datei erstellt wurde, kann die disk-Option des eben aufgeführten Befehls auch geändert werden in:
 
