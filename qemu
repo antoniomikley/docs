@@ -1,0 +1,34 @@
+#!/bin/bash
+
+# IMPORTANT: Change the "VM NAME" string to match your actual VM Name.
+# In order to create rules to other VMs, just duplicate the below block and configure
+# it accordingly.
+
+if [ "${1}" = "vm1" ]; then
+   # Update the following variables to fit your setup
+
+   GUEST_IP=192.168.122.20
+   GUEST_PORT=443
+   HOST_PORT=9001
+
+   if [ "${2}" = "stopped" ] || [ "${2}" = "reconnect" ]; then
+	/sbin/iptables -D FORWARD -o virbr0 -p tcp -d $GUEST_IP --dport $GUEST_PORT -j ACCEPT
+	/sbin/iptables -t nat -D PREROUTING -p tcp --dport $HOST_PORT -j DNAT --to $GUEST_IP:$GUEST_PORT
+   fi
+   if [ "${2}" = "start" ] || [ "${2}" = "reconnect" ]; then
+	/sbin/iptables -I FORWARD -o virbr0 -p tcp -d $GUEST_IP --dport $GUEST_PORT -j ACCEPT
+	/sbin/iptables -t nat -I PREROUTING -p tcp --dport $HOST_PORT -j DNAT --to $GUEST_IP:$GUEST_PORT
+	/sbin/iptables -A PREROUTING -d 192.168.112.17/23 -p tcp -m tcp --dport 9001 -j DNAT --to-destination 192.168.122.20:443
+	/sbin/iptables -t filter -A FORWARD -d 192.168.122.20/24 -o virbr0 -p tcp -m tcp --syn -m conntrack --ctstate NEW -m multiport --dports 80,9001 -j ACCEPT
+	/sbin/iptables -A FORWARD -d 192.168.122.0/24 -o virbr0 -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+	/sbin/iptables -A FORWARD -s 192.168.122.0/24 -i virbr0 -j ACCEPT
+	/sbin/iptables -t nat -A POSTROUTING -s 192.168.122.0/24 ! -d 192.168.122.0/24 -p tcp -j MASQUERADE --to-ports 1024-6553
+	/sbin/iptables -t nat -A POSTROUTING -s 192.168.122.0/24 ! -d 192.168.122.0/24 -p udp -j MASQUERADE --to-ports 1024-65535
+	/sbin/iptables -t nat -A POSTROUTING -s 192.168.122.0/24 ! -d 192.168.122.0/24 -j MASQUERADE
+	/sbin/iptables -t filter -A FORWARD -d 192.168.122.20/24 -o virbr0 -p tcp -m tcp --syn -m conntrack --ctstate NEW -m multiport --dports 80,443 -j ACCEPT
+	/sbin/iptables -t filter -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+	/sbin/iptables -t filter -A INPUT -i lo -j ACCEPT
+	/sbin/iptables -t filter -A INPUT -p icmp --icmp-type 8 -m conntrack --ctstate NEW -j ACCEPT
+	/sbin/iptables -t filter -A FORWARD -i wlp3s0 -o virbr0 -j ACCEPT
+   fi
+fi
