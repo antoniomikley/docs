@@ -64,12 +64,14 @@ Um das Kernelmodul zu installieren, muss die `rust_test.rs` Datei nach
 `/Pfad-zum-Kernel/samples/rust/` kopiert werden und anschließend müssen in diesem Ordner die Makefile und die Kconfig Datein
 modifiziert werden, so dass diese das Modul enthalten. 
 
-> Pfad-zum-Kernel/samples/rust/Makefile
+`Pfad-zum-Kernel/samples/rust/Makefile`
 
-`obj-$(CONFIG_SAMPLE_RUST_TEST)   += rust_test.o`
+```
+obj-$(CONFIG_SAMPLE_RUST_TEST)   += rust_test.o
+```
 
 
-> Pfad-zum-Kernel/samples/rust/Kconfig
+`Pfad-zum-Kernel/samples/rust/Kconfig`
 
 ```
 config SAMPLE_RUST_TEST
