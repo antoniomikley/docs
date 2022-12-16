@@ -8,11 +8,11 @@ dem Kernelmodul zu interagieren.
 ---
 
 1. [Vorraussetzungen](#Vorraussetzungen)
-  - [Rust](#Rust) 
-  - [Kernel](#Kernel) 
+    - [Rust](#Rust) 
+    - [Kernel](#Kernel) 
 2. [Stringsuche](#Stringsuche)
-  - [Modul](#Modul)
-  - [Client](#Client)
+    - [Modul](#Modul)
+    - [Client](#Client)
 
 ---
 
