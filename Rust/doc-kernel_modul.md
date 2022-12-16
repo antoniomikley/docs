@@ -1,5 +1,5 @@
 
-#Stringsuche im Kernel mit Rust
+# Stringsuche im Kernel mit Rust
 
 Dieses Dokument beschreibt die Entwicklung eines Linux-Kernelmoduls in Rust zur Suche von Schlüsselwörtern 
 und einer komlementären Client-Anwendung, welche es möglichst effiziene und einfach machen soll, mit 
@@ -9,8 +9,8 @@ dem Kernelmodul zu interagieren.
 Toc
 ---
 
-##Vorraussetzungen
-###Rust
+## Vorraussetzungen
+### Rust
 
 Die meisten Linux-Distributionen stellen ein einfaches Rust Packet in ihren Repositories zur Verfügung, 
 welches jedoch in diesem Fall nicht ausreicht. Stattdessen kann Rust mit den notendigen Entwicklungswerkzeugen 
@@ -25,7 +25,7 @@ Dies ist nur relevant fÜr die Entwicklung des Kernelmoduls selbst und nicht fü
 
 Genauere Anleitungen sind [hier](https://github.com/Rust-for-Linux/linux/blob/rust/Documentation/rust/quick-start.rst) zu finden.
 
-###Kernel
+### Kernel
 
 Rust wird ab Version 6.1 im Kernel unterstützt, jedoch nur mit minimalen Features. Für die Funktionalität des Kernelmoduls 
 muss stattdessen eine modifizierte Version des Kernels des Rust-for-Linux-Projekts kompiliert werden.
@@ -43,7 +43,7 @@ der Pfad zu der zu durchsuchenden Datei sowie das Schlüsselwort geliefert wird.
 
 `# /Pfad-zur-Client-App /Pfad-zur-Textdatei 'Schlüsselwort'`
 
-Die Client-Anwendung öffnet dann die zu durchsuchende Datei sowie das Character-Device unter /dev/test0 und versucht 
+Die Client-Anwendung öffnet dann die zu durchsuchende Datei sowie das Character-Device unter `/dev/test0` und versucht 
 dann zwei Tcp-Streams zum Charecter-Device aufzubauen. Über einen Stream wird das Schlüsselwort zum Kernelmodul geschickt 
 und auf dem anderen Stream werden die Ergebnisse der Suche zurückgeschickt.
 Anschließend liest die Client-Anwendung eine bestimmte Anzahl an Bytes aus der Textdatei und schreibt diese in das Charecter-Device.
@@ -51,7 +51,7 @@ Dort werden die Bytes überprüft, ob sie mit den Bytes des Schlüsselwortes üb
 Dieser Prozess wird wiederholt bis alle Bytes aus der zu durchsuchenden Datei gelesen wurden. Fortschritt wird dabei durch eine Leiste angezeigt, welche von einem dritten Thread auf die Befehlszeile geschrieben wird. 
 Ist die Suche abgeschlossen wird noch die Anzahl der Ergebnisse angezeigt.
 
-##Modul
+## Modul
 
 Um das Kernelmodul zu installieren, muss die `rust_test.rs` Datei nach 
 `/Pfad-zum-Kernel/samples/rust/` kopiert werden und anschließend müssen in diesem Ordner die Makefile und die Kconfig Datein
@@ -63,7 +63,7 @@ Nachdem der Kernel kompiliert wurde, startet das Modul beim nächsten Boot.
 
 `$ make LLVM=1`
 
-##Client
+## Client
 
 Um dem Client zu installieren, ist cargo im Grundverzeichnßis des Clients auszuführen:
 
