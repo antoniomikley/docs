@@ -41,7 +41,14 @@ muss stattdessen eine modifizierte Version des Kernels des Rust-for-Linux-Projek
 
 Außerdem mus der Kernel mit libclang kompiliert werden, was Teil von LLVM ist.
 
+Um Rust-Support zu aktivieren, muss die Rust Support Option unter 
+`General Settings -> Rust Support` im `$make menuconfig` angekreuzt sein.
 
+Wenn diese Option dort nicht auftaucht, kann 
+
+`$make rustavailable`
+
+mehr Informationen liefern, weshalb dies der Fall sein könnte.
 
 ## Stringsuche
 
@@ -51,7 +58,7 @@ der Pfad zu der zu durchsuchenden Datei sowie das Schlüsselwort geliefert wird.
 `# /Pfad-zur-Client-App /Pfad-zur-Textdatei 'Schlüsselwort'`
 
 Die Client-Anwendung öffnet dann die zu durchsuchende Datei sowie das Character-Device unter `/dev/test0` und versucht 
-dann zwei Tcp-Streams zum Charecter-Device aufzubauen. Über einen Stream wird das Schlüsselwort zum Kernelmodul geschickt 
+dann zwei Tcp-Streams zum Character-Device aufzubauen. Über einen Stream wird das Schlüsselwort zum Kernelmodul geschickt 
 und auf dem anderen Stream werden die Ergebnisse der Suche zurückgeschickt.
 Anschließend liest die Client-Anwendung eine bestimmte Anzahl an Bytes aus der Textdatei und schreibt diese in das Character-Device.
 Dort werden die Bytes überprüft, ob sie mit den Bytes des Schlüsselwortes übereinstimmen. Die Postionen an welchen übereinstimmungen gefunden wurden, werden dann über den zweiten Tcp-Stream an die Client-Anwendung zurückgeschickt, wo sie in einem separaten Thread gezählt und in eine Textdatei geschrieben werden.
