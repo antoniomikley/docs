@@ -6,7 +6,14 @@ und einer komlementären Client-Anwendung, welche es möglichst effiziene und ei
 dem Kernelmodul zu interagieren.
 
 ---
-Toc
+
+1. [Vorraussetzungen](#Vorraussetzungen)
+  - [Rust](#Rust) 
+  - [Kernel](#Kernel) 
+2. [Stringsuche](#Stringsuche)
+  - [Modul](#Modul)
+  - [Client](#Client)
+
 ---
 
 ## Vorraussetzungen
@@ -46,24 +53,26 @@ der Pfad zu der zu durchsuchenden Datei sowie das Schlüsselwort geliefert wird.
 Die Client-Anwendung öffnet dann die zu durchsuchende Datei sowie das Character-Device unter `/dev/test0` und versucht 
 dann zwei Tcp-Streams zum Charecter-Device aufzubauen. Über einen Stream wird das Schlüsselwort zum Kernelmodul geschickt 
 und auf dem anderen Stream werden die Ergebnisse der Suche zurückgeschickt.
-Anschließend liest die Client-Anwendung eine bestimmte Anzahl an Bytes aus der Textdatei und schreibt diese in das Charecter-Device.
+Anschließend liest die Client-Anwendung eine bestimmte Anzahl an Bytes aus der Textdatei und schreibt diese in das Character-Device.
 Dort werden die Bytes überprüft, ob sie mit den Bytes des Schlüsselwortes übereinstimmen. Die Postionen an welchen übereinstimmungen gefunden wurden, werden dann über den zweiten Tcp-Stream an die Client-Anwendung zurückgeschickt, wo sie in einem separaten Thread gezählt und in eine Textdatei geschrieben werden.
 Dieser Prozess wird wiederholt bis alle Bytes aus der zu durchsuchenden Datei gelesen wurden. Fortschritt wird dabei durch eine Leiste angezeigt, welche von einem dritten Thread auf die Befehlszeile geschrieben wird. 
 Ist die Suche abgeschlossen wird noch die Anzahl der Ergebnisse angezeigt.
 
-## Modul
+### Modul
 
 Um das Kernelmodul zu installieren, muss die `rust_test.rs` Datei nach 
 `/Pfad-zum-Kernel/samples/rust/` kopiert werden und anschließend müssen in diesem Ordner die Makefile und die Kconfig Datein
 modifiziert werden, so dass diese das Modul enthalten. Mit 
-`$ make menuconfig` kann das Modul dann unter 
-`Kernel Hacking -> Samples -> Rust -> test device` aktiviert werden.
+`$ make menuconfig` kann das Modul dann unter
+
+`Kernel Hacking -> Samples -> Rust -> test device` 
+aktiviert werden.
 
 Nachdem der Kernel kompiliert wurde, startet das Modul beim nächsten Boot.
 
 `$ make LLVM=1`
 
-## Client
+### Client
 
 Um dem Client zu installieren, ist cargo im Grundverzeichnßis des Clients auszuführen:
 
