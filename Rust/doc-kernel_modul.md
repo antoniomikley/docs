@@ -62,10 +62,31 @@ Ist die Suche abgeschlossen wird noch die Anzahl der Ergebnisse angezeigt.
 
 Um das Kernelmodul zu installieren, muss die `rust_test.rs` Datei nach 
 `/Pfad-zum-Kernel/samples/rust/` kopiert werden und anschließend müssen in diesem Ordner die Makefile und die Kconfig Datein
-modifiziert werden, so dass diese das Modul enthalten. Mit 
+modifiziert werden, so dass diese das Modul enthalten. 
+
+> Pfad-zum-Kernel/samples/rust/Makefile
+
+`obj-$(CONFIG_SAMPLE_RUST_TEST)   += rust_test.o`
+
+
+> Pfad-zum-Kernel/samples/rust/Kconfig
+
+```
+config SAMPLE_RUST_TEST
+        tristate "Test device"
+        help
+          This option builds my rust test device.
+
+          To compile this as a module, choose M here:
+          the module will be called rust_test.
+```
+
+
+Mit 
 `$ make menuconfig` kann das Modul dann unter
 
 `Kernel Hacking -> Samples -> Rust -> test device` 
+
 aktiviert werden.
 
 Nachdem der Kernel kompiliert wurde, startet das Modul beim nächsten Boot.
