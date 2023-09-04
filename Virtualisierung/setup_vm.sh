@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 vm_name=$1
 ram=$2
